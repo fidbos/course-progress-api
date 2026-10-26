@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+﻿from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import User
@@ -11,7 +11,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 def register(data: RegisterIn, db: Session = Depends(get_db)):
     email = str(data.email).lower()
     if db.query(User).filter(User.email == email).first():
-        raise HTTPException(status_code=409, detail="Bu email allaqachon ro‘yxatdan o‘tgan")
+        raise HTTPException(status_code=409, detail="Bu email allaqachon roвЂyxatdan oвЂtgan")
     user = User(email=email, password_hash=hash_password(data.password), role="student")
     db.add(user)
     db.commit()
@@ -22,5 +22,5 @@ def register(data: RegisterIn, db: Session = Depends(get_db)):
 def login(data: LoginIn, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == str(data.email).lower()).first()
     if not user or not verify_password(data.password, user.password_hash):
-        raise HTTPException(status_code=401, detail="Email yoki parol noto‘g‘ri")
+        raise HTTPException(status_code=401, detail="Email yoki parol notoвЂgвЂri")
     return {"access_token": create_access_token(user.id), "token_type": "bearer"}
